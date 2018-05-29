@@ -6,6 +6,8 @@ import java.util.Arrays;
 import javax.xml.bind.DatatypeConverter;
 
 public class AESDecipher {
+	private static HexToString conversor;
+	
 	public static String toHexString(byte[] array) {
 		return DatatypeConverter.printHexBinary(array);
 	}
@@ -25,11 +27,18 @@ public class AESDecipher {
 	}
 	
 	public static void main(String[] args) throws Exception{
+		conversor = new HexToString();
 		SecretKeySpec skeySpec = getSecretKey(args[0]);
 		
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-		byte[] deciphered = cipher.doFinal(toByteArray(args[1]));
+						
+		String hexString = args[1];
+		byte[] stringbizarra = conversor.hexStringToByteArray(hexString);
+		
+		byte[] deciphered = cipher.doFinal(stringbizarra);
+		
+		
 		
 		System.out.println("encrypted string: "+(new String(deciphered)));
 	}
